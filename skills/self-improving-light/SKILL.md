@@ -34,7 +34,7 @@ metadata:
 ### 3. 会话结束时：沉淀经验
 
 将本次会话中的错误、踩坑、经验写入 `<project>/docs/learning/YYYY-MM-DD.md`（同一天追加）。
-
+每条记录的标题需要带上当前的时间
 每条记录格式：
 
 ```markdown
