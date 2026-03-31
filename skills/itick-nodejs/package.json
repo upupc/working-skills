@@ -1,0 +1,14 @@
+{
+  "name": "itick-nodejs-skill",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Node.js helpers for iTick REST/WebSocket API",
+  "scripts": {
+    "rest": "node scripts/itick_rest.js",
+    "ws": "node scripts/itick_ws.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

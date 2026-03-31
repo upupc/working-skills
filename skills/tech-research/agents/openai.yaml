@@ -1,0 +1,4 @@
+interface:
+  display_name: "Tech Research"
+  short_description: "用于通用研究拆题、关键词扩写与搜索框架生成"
+  default_prompt: "使用 $tech-research 解析我的研究主题，拆解子题，并扩写出可直接用于搜索的中英文关键词。"

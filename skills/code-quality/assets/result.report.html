@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>代码质量总览报告</title>
+  <style>
+    :root {
+      --bg: #f4f1ea;
+      --panel: rgba(255, 255, 255, 0.88);
+      --line: #d7cfc1;
+      --text: #1d2a2f;
+      --muted: #6e746d;
+      --primary: #146c6e;
+      --objective: #2a6fdb;
+      --encouraging: #198754;
+      --vicious: #c44536;
+      --excellent: #198754;
+      --good: #4c956c;
+      --watch: #d48806;
+      --risk: #c44536;
+      --shadow: 0 16px 40px rgba(54, 56, 45, 0.10);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(20, 108, 110, 0.12), transparent 32%),
+        radial-gradient(circle at left 20%, rgba(212, 136, 6, 0.10), transparent 26%),
+        linear-gradient(180deg, #f8f5ef 0%, var(--bg) 100%);
+    }
+    .wrap { max-width: 1480px; margin: 0 auto; padding: 32px 20px 56px; }
+    .hero {
+      padding: 28px;
+      border: 1px solid rgba(255,255,255,0.45);
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(245,250,249,0.88));
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+    }
+    .eyebrow { color: var(--primary); font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+    h1 { margin: 10px 0 8px; font-size: clamp(28px, 5vw, 44px); line-height: 1.1; }
+    .hero p { margin: 0; color: var(--muted); font-size: 15px; }
+    .grid { display: grid; gap: 18px; }
+    .metrics { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-bottom: 18px; }
+    .panel {
+      background: var(--panel);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.5);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+    }
+    .metric { padding: 20px 22px; }
+    .metric-label { color: var(--muted); font-size: 13px; margin-bottom: 10px; }
+    .metric-value { font-size: 34px; font-weight: 700; line-height: 1; }
+    .metric-sub { margin-top: 10px; color: var(--muted); font-size: 13px; }
+    .section { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 18px; margin-bottom: 18px; }
+    .section-card { padding: 22px; }
+    .section-title { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .section-subtitle { color: var(--muted); font-size: 14px; margin-bottom: 18px; }
+    .char-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+    .char-card { padding: 16px; border-radius: 18px; color: #fff; }
+    .char-card.objective { background: linear-gradient(135deg, #4c8df0, #2a6fdb); }
+    .char-card.encouraging { background: linear-gradient(135deg, #2ca66f, #198754); }
+    .char-card.vicious { background: linear-gradient(135deg, #dd6b5f, #c44536); }
+    .char-name { font-size: 13px; opacity: 0.88; }
+    .char-score { margin-top: 8px; font-size: 32px; font-weight: 700; }
+    .char-score span { font-size: 15px; opacity: 0.82; }
+    .dist-list { display: grid; gap: 14px; }
+    .dist-item { padding: 14px 16px; border-radius: 16px; background: rgba(255,255,255,0.56); border: 1px solid var(--line); }
+    .dist-header { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 10px; font-size: 14px; }
+    .dist-bar { height: 10px; border-radius: 999px; background: rgba(29, 42, 47, 0.08); overflow: hidden; }
+    .dist-bar span { display: block; height: 100%; border-radius: inherit; }
+    .dist-item.excellent .dist-bar span { background: var(--excellent); }
+    .dist-item.good .dist-bar span { background: var(--good); }
+    .dist-item.watch .dist-bar span { background: var(--watch); }
+    .dist-item.risk .dist-bar span { background: var(--risk); }
+    .radar-card {
+      margin-bottom: 18px;
+      padding: 22px;
+    }
+    .radar-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
+      gap: 18px;
+      align-items: center;
+    }
+    .radar-wrap {
+      min-height: 420px;
+      padding: 12px;
+      border-radius: 20px;
+      background: rgba(255,255,255,0.52);
+      border: 1px solid rgba(215, 207, 193, 0.8);
+    }
+    .radar-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .radar-legend {
+      display: grid;
+      gap: 12px;
+    }
+    .radar-legend-item {
+      display: grid;
+      grid-template-columns: 12px minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.56);
+      border: 1px solid var(--line);
+    }
+    .radar-legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #146c6e, #5ea3a4);
+    }
+    .radar-legend-label {
+      color: var(--text);
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .radar-legend-value {
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .table-card { padding: 22px; overflow: hidden; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; min-width: 1200px; border-collapse: collapse; }
+    th, td { padding: 16px 12px; border-bottom: 1px solid #e9e2d8; vertical-align: top; font-size: 14px; text-align: left; }
+    th { color: var(--muted); font-size: 13px; font-weight: 700; background: rgba(250,248,243,0.88); }
+    .sort-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .sort-indicator {
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    tr:hover td { background: rgba(255,255,255,0.42); }
+    .employee-link { color: var(--primary); text-decoration: none; font-weight: 700; }
+    .employee-link:hover { text-decoration: underline; }
+    .employee-meta { margin-top: 4px; color: var(--muted); font-size: 12px; }
+    .score-chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 68px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      color: #fff;
+      font-weight: 700;
+    }
+    .score-chip.excellent { background: var(--excellent); }
+    .score-chip.good { background: var(--good); }
+    .score-chip.watch { background: var(--watch); }
+    .score-chip.risk { background: var(--risk); }
+    .comment-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .comment-action {
+      appearance: none;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .comment-action[hidden] { display: none; }
+    .comment-card {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: #fff;
+      border: 1px solid #ece4da;
+      margin-bottom: 10px;
+      max-width: 420px;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+    .comment-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .comment-list[hidden] { display: none; }
+    .comment-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px rgba(54, 56, 45, 0.08);
+      border-color: rgba(20, 108, 110, 0.24);
+    }
+    .comment-card:last-child { margin-bottom: 0; }
+    .comment-card.objective { border-left: 4px solid var(--objective); }
+    .comment-card.encouraging { border-left: 4px solid var(--encouraging); }
+    .comment-card.vicious { border-left: 4px solid var(--vicious); }
+    .comment-title { font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+    .comment-body {
+      color: var(--muted);
+      line-height: 1.7;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      overflow: hidden;
+    }
+    .comment-tip { margin-top: 8px; color: var(--primary); font-size: 12px; font-weight: 600; }
+    .comment-modal[hidden] { display: none; }
+    .comment-modal {
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .comment-modal-backdrop {
+      position: absolute;
+      inset: 0;
+      background: rgba(29, 42, 47, 0.42);
+      backdrop-filter: blur(6px);
+    }
+    .comment-modal-panel {
+      position: relative;
+      width: min(720px, calc(100vw - 32px));
+      max-height: min(80vh, 720px);
+      padding: 24px;
+      border-radius: 24px;
+      background: rgba(255, 255, 255, 0.98);
+      box-shadow: 0 24px 80px rgba(29, 42, 47, 0.28);
+      overflow: hidden;
+    }
+    .comment-modal-close {
+      position: absolute;
+      top: 14px;
+      right: 14px;
+      width: 36px;
+      height: 36px;
+      border: 0;
+      border-radius: 999px;
+      background: rgba(29, 42, 47, 0.08);
+      color: var(--text);
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .comment-modal-title {
+      padding-right: 48px;
+      margin-bottom: 16px;
+      font-size: 20px;
+      font-weight: 700;
+    }
+    .comment-modal-body {
+      max-height: calc(80vh - 120px);
+      overflow: auto;
+      color: var(--muted);
+      line-height: 1.8;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    body.modal-open { overflow: hidden; }
+    .empty-state { padding: 56px 24px; text-align: center; color: var(--muted); }
+    code { background: rgba(20, 108, 110, 0.08); padding: 2px 6px; border-radius: 6px; }
+    @media (max-width: 1100px) {
+      .metrics, .section, .char-grid { grid-template-columns: 1fr 1fr; }
+      .section { grid-template-columns: 1fr; }
+      .char-grid { grid-template-columns: 1fr; }
+      .radar-layout { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 720px) {
+      .wrap { padding: 20px 14px 40px; }
+      .hero, .metric, .section-card, .table-card { padding: 18px; border-radius: 20px; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .metric-value { font-size: 28px; }
+    }
+    @media (max-width: 560px) {
+      .metrics { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap" id="app"></div>
+  <div class="comment-modal" id="commentModal" hidden>
+    <div class="comment-modal-backdrop" data-comment-close="true"></div>
+    <div class="comment-modal-panel" role="dialog" aria-modal="true" aria-labelledby="commentModalTitle">
+      <button class="comment-modal-close" id="commentModalClose" type="button" aria-label="关闭">×</button>
+      <div class="comment-modal-title" id="commentModalTitle"></div>
+      <div class="comment-modal-body" id="commentModalBody"></div>
+    </div>
+  </div>
+
+  <script>
+    const RAW_DATA = __RESULT_JSON_PLACEHOLDER__;
+
+    const DIM_ORDER = [
+      "commit_log",
+      "comment",
+      "log",
+      "unit_test",
+      "complexity",
+      "scalability",
+      "exception_handling",
+      "refactoring",
+      "business_code_contribution",
+      "new_syntax_features"
+    ];
+
+    const DIM_NAMES = {
+      commit_log: "Commit Log",
+      comment: "注释",
+      log: "日志",
+      unit_test: "单元测试",
+      complexity: "复杂度",
+      scalability: "扩展性",
+      exception_handling: "异常处理",
+      refactoring: "重构",
+      business_code_contribution: "业务代码贡献",
+      new_syntax_features: "新语法新特性"
+    };
+
+    const CHARACTER_ORDER = ["objective", "encouraging", "vicious"];
+    const CHARACTER_NAMES = {
+      objective: "客观型",
+      encouraging: "鼓励型",
+      vicious: "恶毒型"
+    };
+    let currentScoreSortOrder = "desc";
+
+    function flattenResults(input) {
+      const results = Array.isArray(input.results) ? input.results : [];
+      return results.flatMap((item) => Array.isArray(item) ? item : [item]);
+    }
+
+    function round(value) {
+      return Math.round((Number(value) || 0) * 100) / 100;
+    }
+
+    function avg(list) {
+      if (!list.length) {
+        return 0;
+      }
+      return round(list.reduce((sum, value) => sum + value, 0) / list.length);
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function formatScore(value) {
+      return round(value).toFixed(2);
+    }
+
+    function polarToCartesian(centerX, centerY, radius, angle) {
+      return {
+        x: round(centerX + radius * Math.cos(angle)),
+        y: round(centerY + radius * Math.sin(angle))
+      };
+    }
+
+    function buildRadarSvg(values) {
+      const size = 520;
+      const center = size / 2;
+      const maxRadius = 170;
+      const levels = 5;
+      const axisCount = DIM_ORDER.length;
+      const startAngle = -Math.PI / 2;
+      const angleStep = (Math.PI * 2) / axisCount;
+      const axes = DIM_ORDER.map((key, index) => {
+        const angle = startAngle + angleStep * index;
+        const point = polarToCartesian(center, center, maxRadius, angle);
+        const valuePoint = polarToCartesian(center, center, maxRadius * ((values[key] || 0) / 5), angle);
+        const labelPoint = polarToCartesian(center, center, maxRadius + 34, angle);
+        return {
+          key,
+          angle,
+          point,
+          valuePoint,
+          labelPoint
+        };
+      });
+
+      const gridPolygons = Array.from({ length: levels }, (_, index) => {
+        const radius = maxRadius * ((index + 1) / levels);
+        const points = axes
+          .map((axis) => {
+            const point = polarToCartesian(center, center, radius, axis.angle);
+            return point.x + "," + point.y;
+          })
+          .join(" ");
+        return '<polygon points="' + points + '" fill="none" stroke="rgba(29, 42, 47, 0.12)" stroke-width="1"></polygon>';
+      }).join("");
+
+      const axisLines = axes
+        .map((axis) => '<line x1="' + center + '" y1="' + center + '" x2="' + axis.point.x + '" y2="' + axis.point.y + '" stroke="rgba(29, 42, 47, 0.12)" stroke-width="1"></line>')
+        .join("");
+
+      const valuePolygon = axes
+        .map((axis) => axis.valuePoint.x + "," + axis.valuePoint.y)
+        .join(" ");
+
+      const valueDots = axes
+        .map((axis) => '<circle cx="' + axis.valuePoint.x + '" cy="' + axis.valuePoint.y + '" r="4" fill="#146c6e" stroke="#fff" stroke-width="2"></circle>')
+        .join("");
+
+      const labels = axes
+        .map((axis) => {
+          const anchor = axis.labelPoint.x < center - 12 ? "end" : (axis.labelPoint.x > center + 12 ? "start" : "middle");
+          return '<text x="' + axis.labelPoint.x + '" y="' + axis.labelPoint.y + '" text-anchor="' + anchor + '" font-size="12" font-weight="600" fill="#1d2a2f">' +
+            escapeHtml(DIM_NAMES[axis.key]) + '</text>';
+        })
+        .join("");
+
+      const ticks = Array.from({ length: levels }, (_, index) => {
+        const y = center - maxRadius * ((index + 1) / levels);
+        return '<text x="' + (center + 8) + '" y="' + (y - 6) + '" font-size="11" fill="#6e746d">' + (index + 1) + '</text>';
+      }).join("");
+
+      return '<svg class="radar-svg" viewBox="0 0 ' + size + ' ' + size + '" role="img" aria-label="维度均分雷达图">' +
+        '<defs><linearGradient id="radarFill" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="rgba(20,108,110,0.34)"></stop><stop offset="100%" stop-color="rgba(94,163,164,0.16)"></stop></linearGradient></defs>' +
+        gridPolygons +
+        axisLines +
+        '<polygon points="' + valuePolygon + '" fill="url(#radarFill)" stroke="rgba(20,108,110,0.95)" stroke-width="3"></polygon>' +
+        valueDots +
+        ticks +
+        labels +
+      '</svg>';
+    }
+
+    function openCommentModal(title, content) {
+      const modal = document.getElementById("commentModal");
+      const modalTitle = document.getElementById("commentModalTitle");
+      const modalBody = document.getElementById("commentModalBody");
+      modalTitle.textContent = title;
+      modalBody.textContent = content;
+      modal.hidden = false;
+      document.body.classList.add("modal-open");
+    }
+
+    function closeCommentModal() {
+      const modal = document.getElementById("commentModal");
+      modal.hidden = true;
+      document.body.classList.remove("modal-open");
+    }
+
+    function bindCommentEvents() {
+      document.querySelectorAll(".comment-expand[data-comment-target]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const targetId = button.dataset.commentTarget;
+          const list = targetId ? document.getElementById(targetId) : null;
+          const collapseButton = button.parentElement && button.parentElement.querySelector(".comment-collapse");
+          if (!list || !collapseButton) {
+            return;
+          }
+          list.hidden = false;
+          button.hidden = true;
+          collapseButton.hidden = false;
+        });
+      });
+
+      document.querySelectorAll(".comment-collapse[data-comment-target]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const targetId = button.dataset.commentTarget;
+          const list = targetId ? document.getElementById(targetId) : null;
+          const expandButton = button.parentElement && button.parentElement.querySelector(".comment-expand");
+          if (!list || !expandButton) {
+            return;
+          }
+          list.hidden = true;
+          button.hidden = true;
+          expandButton.hidden = false;
+        });
+      });
+
+      document.querySelectorAll(".comment-card[data-comment-content]").forEach((card) => {
+        card.addEventListener("click", () => {
+          openCommentModal(card.dataset.commentTitle || "整体评价", card.dataset.commentContent || "-");
+        });
+      });
+    }
+
+    function bindModalEvents() {
+      const modal = document.getElementById("commentModal");
+      const closeButton = document.getElementById("commentModalClose");
+      closeButton.addEventListener("click", closeCommentModal);
+      modal.addEventListener("click", (event) => {
+        const target = event.target;
+        if (target instanceof HTMLElement && target.dataset.commentClose === "true") {
+          closeCommentModal();
+        }
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !modal.hidden) {
+          closeCommentModal();
+        }
+      });
+    }
+
+    function getScoreLevel(score) {
+      if (score >= 4) return { label: "优秀", className: "excellent" };
+      if (score >= 3.5) return { label: "良好", className: "good" };
+      if (score >= 3) return { label: "待提升", className: "watch" };
+      return { label: "风险", className: "risk" };
+    }
+
+    function groupByEmployee(records) {
+      const map = new Map();
+      for (const record of records) {
+        const key = record.account || record.empId || `${record.name || "unknown"}-${record.character}`;
+        if (!map.has(key)) {
+          map.set(key, {
+            account: record.account || "unknown",
+            empId: record.empId || null,
+            name: record.name || record.nickName || record.account || "未知员工",
+            nickName: record.nickName || "-",
+            depDesc: record.depDesc || "-",
+            repoPath: record.repoPath || "-",
+            branch: record.branch || "-",
+            roles: {}
+          });
+        }
+        const employee = map.get(key);
+        employee.roles[record.character] = record;
+        if (employee.name === "未知员工" && record.name) employee.name = record.name;
+        if (employee.nickName === "-" && record.nickName) employee.nickName = record.nickName;
+        if (employee.depDesc === "-" && record.depDesc) employee.depDesc = record.depDesc;
+        if (employee.repoPath === "-" && record.repoPath) employee.repoPath = record.repoPath;
+        if (employee.branch === "-" && record.branch) employee.branch = record.branch;
+      }
+
+      return Array.from(map.values()).map((employee) => {
+        const scores = CHARACTER_ORDER
+          .map((character) => employee.roles[character] && employee.roles[character].totalScore)
+          .filter((score) => typeof score === "number");
+
+        return {
+          ...employee,
+          averageScore: avg(scores),
+          roleCount: scores.length
+        };
+      }).sort((a, b) => b.averageScore - a.averageScore || a.account.localeCompare(b.account));
+    }
+
+    function buildSummary(records, employees) {
+      const overallAverage = avg(employees.map((item) => item.averageScore));
+
+      const characterAverages = Object.fromEntries(
+        CHARACTER_ORDER.map((character) => [
+          character,
+          avg(records.filter((item) => item.character === character).map((item) => item.totalScore))
+        ])
+      );
+
+      const dimensionAverage = Object.fromEntries(
+        DIM_ORDER.map((key) => {
+          const values = records
+            .map((record) => record.dimensions && record.dimensions[key] && record.dimensions[key].score)
+            .filter((score) => typeof score === "number");
+          return [key, avg(values)];
+        })
+      );
+
+      const buckets = [
+        { key: "excellent", label: "优秀 (>=4.0)", test: (score) => score >= 4 },
+        { key: "good", label: "良好 (3.5-3.99)", test: (score) => score >= 3.5 && score < 4 },
+        { key: "watch", label: "待提升 (3.0-3.49)", test: (score) => score >= 3 && score < 3.5 },
+        { key: "risk", label: "风险 (<3.0)", test: (score) => score < 3 }
+      ].map((bucket) => {
+        const count = employees.filter((item) => bucket.test(item.averageScore)).length;
+        const ratio = employees.length ? round(count * 100 / employees.length) : 0;
+        return { ...bucket, count, ratio };
+      });
+
+      return {
+        overallAverage,
+        characterAverages,
+        dimensionAverage,
+        buckets,
+        employeeCount: employees.length,
+        recordCount: records.length
+      };
+    }
+
+    function sortEmployees(employees) {
+      const factor = currentScoreSortOrder === "asc" ? 1 : -1;
+      return [...employees].sort((a, b) => {
+        if (a.averageScore !== b.averageScore) {
+          return (a.averageScore - b.averageScore) * factor;
+        }
+        return a.account.localeCompare(b.account);
+      });
+    }
+
+    function render() {
+      const app = document.getElementById("app");
+      if (!RAW_DATA || RAW_DATA === "__RESULT_JSON_PLACEHOLDER__") {
+        app.innerHTML = '<section class="hero"><div class="eyebrow">Code Quality Dashboard</div><h1>所有员工代码质量总览报告</h1><p>请将 <code>const RAW_DATA = __RESULT_JSON_PLACEHOLDER__;</code> 中的占位符替换为完整的 result.json 内容。</p></section>';
+        return;
+      }
+
+      const records = flattenResults(RAW_DATA).filter((item) => item && item.account && item.character);
+      const employees = groupByEmployee(records);
+      const summary = buildSummary(records, employees);
+      const sortedEmployees = sortEmployees(employees);
+      const generatedAt = RAW_DATA.generatedAt ? new Date(RAW_DATA.generatedAt).toLocaleString("zh-CN") : "-";
+
+      if (!sortedEmployees.length) {
+        app.innerHTML = '<section class="hero"><div class="eyebrow">Code Quality Dashboard</div><h1>所有员工代码质量总览报告</h1><p>当前数据中没有可展示的员工评估记录。</p></section>';
+        return;
+      }
+
+      const employeeRows = sortedEmployees.map((employee, index) => {
+        const scoreLevel = getScoreLevel(employee.averageScore);
+        const roleCells = CHARACTER_ORDER.map((character) => {
+          const role = employee.roles[character];
+          return role ? formatScore(role.totalScore) : "-";
+        });
+
+        const commentListId = "comment-list-" + escapeHtml(employee.account || String(index));
+        const commentCards = CHARACTER_ORDER.map((character) => {
+          const role = employee.roles[character];
+          if (!role) return "";
+          const title = role.characterDesc || CHARACTER_NAMES[character];
+          const content = role.overallComment || "-";
+          return '<div class="comment-card ' + character + '" data-comment-title="' + escapeHtml(title) +
+            '" data-comment-content="' + escapeHtml(content) + '">' +
+            '<div class="comment-title">' + escapeHtml(title) + '</div>' +
+            '<div class="comment-body">' + escapeHtml(content) + '</div>' +
+            '<div class="comment-tip">点击查看完整内容</div></div>';
+        }).join("");
+        const commentHtml = commentCards
+          ? '<div class="comment-toggle">' +
+            '<div class="comment-actions">' +
+              '<button class="comment-action comment-expand" type="button" data-comment-target="' + commentListId + '">展开评语</button>' +
+              '<button class="comment-action comment-collapse" type="button" data-comment-target="' + commentListId + '" hidden>收起评语</button>' +
+            '</div>' +
+            '<div class="comment-list" id="' + commentListId + '" hidden>' + commentCards + '</div>' +
+          '</div>'
+          : "-";
+
+        return '<tr>' +
+          '<td>' + (index + 1) + '</td>' +
+          '<td><a class="employee-link" href="' + encodeURIComponent(employee.account) + '.result.html" target="_blank" rel="noreferrer">' + escapeHtml(employee.name) + '</a>' +
+          '<div class="employee-meta">' + escapeHtml(employee.account) + (employee.nickName && employee.nickName !== "-" ? ' / ' + escapeHtml(employee.nickName) : '') + '</div></td>' +
+          '<td>' + escapeHtml(employee.depDesc) + '</td>' +
+          '<td>' + roleCells[0] + '</td>' +
+          '<td>' + roleCells[1] + '</td>' +
+          '<td>' + roleCells[2] + '</td>' +
+          '<td><span class="score-chip ' + scoreLevel.className + '">' + formatScore(employee.averageScore) + '</span></td>' +
+          '<td>' + commentHtml + '</td>' +
+          '</tr>';
+      }).join("");
+
+      const bucketHtml = summary.buckets.map((bucket) =>
+        '<div class="dist-item ' + bucket.key + '">' +
+          '<div class="dist-header"><span>' + bucket.label + '</span><strong>' + bucket.count + '人 / ' + bucket.ratio + '%</strong></div>' +
+          '<div class="dist-bar"><span style="width:' + bucket.ratio + '%"></span></div>' +
+        '</div>'
+      ).join("");
+
+      const radarSvg = buildRadarSvg(summary.dimensionAverage);
+      const dimensionHtml = DIM_ORDER.map((key) =>
+        '<div class="radar-legend-item">' +
+          '<span class="radar-legend-dot"></span>' +
+          '<span class="radar-legend-label">' + escapeHtml(DIM_NAMES[key]) + '</span>' +
+          '<strong class="radar-legend-value">' + formatScore(summary.dimensionAverage[key]) + '</strong>' +
+        '</div>'
+      ).join("");
+
+      app.innerHTML =
+        '<section class="hero">' +
+          '<div class="eyebrow">Code Quality Dashboard</div>' +
+          '<h1>所有员工代码质量总览报告</h1>' +
+          '<p>生成时间：' + escapeHtml(generatedAt) + '，共 ' + summary.employeeCount + ' 位员工、' + summary.recordCount + ' 条 character 评估记录。</p>' +
+        '</section>' +
+
+        '<section class="grid metrics">' +
+          '<div class="panel metric"><div class="metric-label">整体平均分</div><div class="metric-value">' + formatScore(summary.overallAverage) + '</div><div class="metric-sub">按员工三种 character 平均分再做整体平均</div></div>' +
+          '<div class="panel metric"><div class="metric-label">员工人数</div><div class="metric-value">' + summary.employeeCount + '</div><div class="metric-sub">去重后账号数量</div></div>' +
+          '<div class="panel metric"><div class="metric-label">评估记录数</div><div class="metric-value">' + summary.recordCount + '</div><div class="metric-sub">理论上每人 3 条</div></div>' +
+          '<div class="panel metric"><div class="metric-label">数据时间</div><div class="metric-value" style="font-size:24px;line-height:1.2;">' + escapeHtml(generatedAt) + '</div><div class="metric-sub">来自 result.json</div></div>' +
+        '</section>' +
+
+        '<section class="section">' +
+          '<div class="panel section-card">' +
+            '<div class="section-title">分 Character 平均分</div>' +
+            '<div class="section-subtitle">便于对比不同评语风格下的打分差异。</div>' +
+            '<div class="char-grid">' +
+              '<div class="char-card objective"><div class="char-name">客观型</div><div class="char-score">' + formatScore(summary.characterAverages.objective) + ' <span>/ 5</span></div></div>' +
+              '<div class="char-card encouraging"><div class="char-name">鼓励型</div><div class="char-score">' + formatScore(summary.characterAverages.encouraging) + ' <span>/ 5</span></div></div>' +
+              '<div class="char-card vicious"><div class="char-name">恶毒型</div><div class="char-score">' + formatScore(summary.characterAverages.vicious) + ' <span>/ 5</span></div></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="panel section-card">' +
+            '<div class="section-title">分数占比</div>' +
+            '<div class="section-subtitle">基于员工综合平均分统计占比。</div>' +
+            '<div class="dist-list">' + bucketHtml + '</div>' +
+          '</div>' +
+        '</section>' +
+
+        '<section class="panel radar-card">' +
+          '<div class="section-title">维度均分</div>' +
+          '<div class="section-subtitle">用雷达图展示各维度整体均分，便于快速定位强项和短板。</div>' +
+          '<div class="radar-layout">' +
+            '<div class="radar-wrap">' + radarSvg + '</div>' +
+            '<div class="radar-legend">' + dimensionHtml + '</div>' +
+          '</div>' +
+        '</section>' +
+
+        '<section class="panel table-card">' +
+          '<div class="section-title">员工列表</div>' +
+          '<div class="section-subtitle">点击员工名称可打开该员工的详情页 &lt;account&gt;.result.html。</div>' +
+          '<div class="table-wrap">' +
+            '<table><thead><tr><th>#</th><th>员工</th><th>部门</th><th>客观型</th><th>鼓励型</th><th>恶毒型</th><th><button class="sort-button" id="scoreSortButton" type="button" title="点击按综合平均分排序">综合平均分 <span class="sort-indicator">' + (currentScoreSortOrder === "desc" ? "↓" : "↑") + '</span></button></th><th>整体评价</th></tr></thead><tbody>' + employeeRows + '</tbody></table>' +
+          '</div>' +
+        '</section>';
+
+      const scoreSortButton = document.getElementById("scoreSortButton");
+      if (scoreSortButton) {
+        scoreSortButton.addEventListener("click", () => {
+          currentScoreSortOrder = currentScoreSortOrder === "desc" ? "asc" : "desc";
+          render();
+        });
+      }
+      bindCommentEvents();
+    }
+
+    document.addEventListener("DOMContentLoaded", bindModalEvents);
+    document.addEventListener("DOMContentLoaded", render);
+  </script>
+</body>
+</html>

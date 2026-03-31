@@ -1,0 +1,7 @@
+interface:
+  display_name: "站点总结"
+  short_description: "抓取网页与视频字幕，保存 Markdown 并输出总结"
+  default_prompt: "使用 $site-summarize 抓取这个网站的页面和其中的视频内容，保存为本地 Markdown 或字幕文件，并按我的要求输出中文总结。"
+
+policy:
+  allow_implicit_invocation: true

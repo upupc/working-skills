@@ -1,0 +1,36 @@
+{
+  "workspace": "./tmp/repos",
+  "afterDate": "2026-03-01",
+  "maxInputLength": 50000,
+  "roles": [
+    "objective",
+    "encouraging",
+    "vicious"
+  ],
+  "llm": {
+    "baseUrl": "https://example.com/v1",
+    "apiKeys": [
+      "sk-example"
+    ],
+    "model": "qwen3.5-plus",
+    "temperature": 0.3,
+    "maxTokens": 65536,
+    "timeoutMs": 360000,
+    "mockEnabled": false
+  },
+  "architect": {
+    "endpoint": "https://pre-architect.alibaba-inc.com/api/queryRecentMostCommittedRepos"
+  },
+  "git": {
+    "baseUrl": "https://code.alibaba-inc.com",
+    "username": "git-user",
+    "token": "git-token"
+  },
+  "repos": [
+    {
+      "account": "demo-user",
+      "repoPath": "group/demo-repo",
+      "branch": "master"
+    }
+  ]
+}

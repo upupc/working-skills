@@ -1,0 +1,11 @@
+{
+  "name": "site-summarize",
+  "version": "0.13.0",
+  "description": "爬取网站页面、批量抓取正文并保存为本地 Markdown，识别并处理 YouTube、Bilibili、TikTok、Vimeo、Twitter/X 等视频链接的字幕或转录文本，最后输出中文总结。适用于抓取整个网站或文档站、离线整理网页资料、处理网页中的视频内容、批量网页总结，或明确提到 tavily-crawl、scrapling-official、video-download、站点汇总等场景。",
+  "publishConfig": {
+    "registry": "https://contextlab.alibaba-inc.com/skill"
+  },
+  "aoneKit": {
+    "generated": true
+  }
+}
