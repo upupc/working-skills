@@ -1,0 +1,11 @@
+{
+  "name": "normandy-cli",
+  "version": "0.16.0",
+  "description": "将自然语言的 Normandy 平台运维问题翻译成正确的 `normandy` CLI 命令，并给出简短、可直接复制的命令模板。只要用户在问 auth 登录、app 应用查询、app-group 应用分组、host 主机查询与登录与容器文件浏览、host diagnose 机器诊断/GPU诊断/pod诊断、app-env 环境、order 工单、quota 额度/配额/额度账号/额度统计/组织管理员、log 日志查询/SLS日志/Pod日志、resource 资源搜索、trait 应用特性/限流/熔断/降级/灰度等治理能力查询、VIP/域名/专线等网络资源、阿里云账号管理（aliyun-account/sub-account/role/user-group）、CLI 升级，或任意 `aliyun-*` 云资源查询应该用什么 Normandy 命令，即使用户没有显式提到 \"CLI\" 或 \"normandy\"，也应使用这个 skill。当用户提到\"查应用\"、\"查机器\"、\"查工单\"、\"查 ECS/RDS/Redis/NLB\"、\"登录主机\"、\"查 VIP\"、\"怎么升级 normandy-cli\"、\"机器异常\"、\"诊断事件\"、\"GPU诊断\"、\"pod诊断\"、\"查日志\"、\"SLS日志\"、\"Pod日志\"、\"容器日志\"、\"看文件\"、\"看目录\"、\"查特性\"、\"trait\"、\"限流规则\"、\"熔断规则\"、\"降级规则\"、\"应用导入了哪些特性\"等运维操作时，也应触发。",
+  "publishConfig": {
+    "registry": "https://contextlab.alibaba-inc.com/skill"
+  },
+  "aoneKit": {
+    "generated": true
+  }
+}

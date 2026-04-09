@@ -40,8 +40,9 @@ if [[ -f "$error_log" ]] && [[ -s "$error_log" ]]; then
     exit 0
 fi
 
+exit 0
 # 情况 2: 没有错误日志，让 agent 判断本轮对话是否涉及修复问题
 # 无论是否总结经验，最终都必须输出 SKIP_MARKER 以终止 hook 循环
-now=$(date +"%Y-%m-%d %H:%M:%S")
-jq -n --arg reason "[self-improving-light] Session ended. No error log found for this session. Review the conversation: if this session involved debugging, fixing bugs, resolving build errors, or troubleshooting issues, summarize the errors and solutions to: ${today_doc}. If NOT about fixing problems, skip summarizing. IMPORTANT: Each learning entry title MUST include the current timestamp: ${now} (format: yyyy-MM-dd HH:mm:ss). You MUST end your response with exactly \"${SKIP_MARKER}\" regardless of whether you summarized or not." \
-    '{"decision": "block", "reason": $reason}'
+#now=$(date +"%Y-%m-%d %H:%M:%S")
+#jq -n --arg reason "[self-improving-light] Session ended. No error log found for this session. Review the conversation: if this session involved debugging, fixing bugs, resolving build errors, or troubleshooting issues, summarize the errors and solutions to: ${today_doc}. If NOT about fixing problems, skip summarizing. IMPORTANT: Each learning entry title MUST include the current timestamp: ${now} (format: yyyy-MM-dd HH:mm:ss). You MUST end your response with exactly \"${SKIP_MARKER}\" regardless of whether you summarized or not." \
+#    '{"decision": "block", "reason": $reason}'
