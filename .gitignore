@@ -70,6 +70,13 @@ htmlcov/
 .pytest_cache/
 .tox/
 
+# OMC runtime
+.omc/sessions/
+.omc/state/
+
+# Workspace artifacts
+*-workspace/
+
 # Project specific
 skills/aone-issue-helper
 skills/yuque-doc-fetcher
