@@ -1,0 +1,20 @@
+{
+  "expectations": [
+    {
+      "text": "Claude 向用户询问了工作项类型（需求/任务/Bug/风险）",
+      "passed": true,
+      "evidence": "Transcript shows clear question to user: '请问这个事项属于以下哪种类型？Req（需求）/ Task（任务）/ Bug（缺陷）/ Risk（风险）'"
+    },
+    {
+      "text": "没有直接执行 create-issue.mjs 命令（因为缺少 stamp 信息）",
+      "passed": true,
+      "evidence": "Transcript explicitly states: 'Do NOT execute the command. Ask the user for clarification first.' No command was executed."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 0,
+    "total": 2,
+    "pass_rate": 1.0
+  }
+}

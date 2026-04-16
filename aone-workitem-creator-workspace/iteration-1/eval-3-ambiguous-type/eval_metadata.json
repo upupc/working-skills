@@ -1,0 +1,9 @@
+{
+  "eval_id": 3,
+  "eval_name": "ambiguous-type",
+  "prompt": "帮我在 aone 项目 460616 记录一下这个事情：'和前端团队对齐接口规范'，我工号 264746，issueTypeId 82",
+  "assertions": [
+    "Claude 向用户询问了工作项类型（需求/任务/Bug/风险）",
+    "没有直接执行 create-issue.mjs 命令（因为缺少 stamp 信息）"
+  ]
+}

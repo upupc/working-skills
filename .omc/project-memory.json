@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "lastScanned": 1775712964353,
+  "lastScanned": 1776243376879,
   "projectRoot": "/Users/liuyuan/workspace/working-skills",
   "techStack": {
     "languages": [],
@@ -36,10 +36,233 @@
       "path": "skills",
       "purpose": null,
       "fileCount": 1,
-      "lastAccessed": 1775712964313,
+      "lastAccessed": 1776243376768,
       "keyFiles": []
     }
   },
-  "hotPaths": [],
+  "hotPaths": [
+    {
+      "path": "skills/aone-workitem-creator/SKILL.md",
+      "accessCount": 20,
+      "lastAccessed": 1776250592585,
+      "type": "file"
+    },
+    {
+      "path": "skills/aone-workitem-creator/scripts/create-workitem.mjs",
+      "accessCount": 7,
+      "lastAccessed": 1776250562403,
+      "type": "file"
+    },
+    {
+      "path": "skills/aone-workitem-creator/scripts/create-issue.mjs",
+      "accessCount": 5,
+      "lastAccessed": 1776245369233,
+      "type": "file"
+    },
+    {
+      "path": "docs/learning/2026-04-15.md",
+      "accessCount": 4,
+      "lastAccessed": 1776246921902,
+      "type": "file"
+    },
+    {
+      "path": "docs/learning/.errors-f7d3111f-2727-4221-a1f7-882b247f5f22.jsonl",
+      "accessCount": 3,
+      "lastAccessed": 1776246906178,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-1-create-req/eval_metadata.json",
+      "accessCount": 2,
+      "lastAccessed": 1776245374978,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-1-create-req/with_skill/outputs/transcript.md",
+      "accessCount": 2,
+      "lastAccessed": 1776245447984,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-1-create-req/without_skill/outputs/transcript.md",
+      "accessCount": 2,
+      "lastAccessed": 1776245448018,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-2-submit-bug/without_skill/outputs/transcript.md",
+      "accessCount": 2,
+      "lastAccessed": 1776245448081,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-3-ambiguous-type/without_skill/outputs/transcript.md",
+      "accessCount": 2,
+      "lastAccessed": 1776245448199,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-2-submit-bug/with_skill/outputs/transcript.md",
+      "accessCount": 2,
+      "lastAccessed": 1776245448253,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-3-ambiguous-type/with_skill/outputs/transcript.md",
+      "accessCount": 2,
+      "lastAccessed": 1776245448279,
+      "type": "file"
+    },
+    {
+      "path": "skills/aone-issue-helper/SKILL.md",
+      "accessCount": 1,
+      "lastAccessed": 1776244791657,
+      "type": "file"
+    },
+    {
+      "path": "skills/aone-issue-creator/scripts/create-issue.mjs",
+      "accessCount": 1,
+      "lastAccessed": 1776244959239,
+      "type": "file"
+    },
+    {
+      "path": "skills/aone-issue-creator/SKILL.md",
+      "accessCount": 1,
+      "lastAccessed": 1776244959772,
+      "type": "file"
+    },
+    {
+      "path": "skills/skill-creator/references/schemas.md",
+      "accessCount": 1,
+      "lastAccessed": 1776245262560,
+      "type": "file"
+    },
+    {
+      "path": "skills/skill-creator/agents/grader.md",
+      "accessCount": 1,
+      "lastAccessed": 1776245262618,
+      "type": "file"
+    },
+    {
+      "path": "skills/aone-workitem-creator/evals/evals.json",
+      "accessCount": 1,
+      "lastAccessed": 1776245292070,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-2-submit-bug/eval_metadata.json",
+      "accessCount": 1,
+      "lastAccessed": 1776245324260,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-3-ambiguous-type/eval_metadata.json",
+      "accessCount": 1,
+      "lastAccessed": 1776245324810,
+      "type": "file"
+    },
+    {
+      "path": "",
+      "accessCount": 1,
+      "lastAccessed": 1776245363878,
+      "type": "directory"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-1-create-req/with_skill/timing.json",
+      "accessCount": 1,
+      "lastAccessed": 1776245407927,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-2-submit-bug/with_skill/timing.json",
+      "accessCount": 1,
+      "lastAccessed": 1776245408458,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-3-ambiguous-type/with_skill/timing.json",
+      "accessCount": 1,
+      "lastAccessed": 1776245424918,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-3-ambiguous-type/without_skill/timing.json",
+      "accessCount": 1,
+      "lastAccessed": 1776245425402,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-1-create-req/without_skill/timing.json",
+      "accessCount": 1,
+      "lastAccessed": 1776245438906,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-2-submit-bug/without_skill/timing.json",
+      "accessCount": 1,
+      "lastAccessed": 1776245439444,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-1-create-req/with_skill/grading.json",
+      "accessCount": 1,
+      "lastAccessed": 1776245487841,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-1-create-req/without_skill/grading.json",
+      "accessCount": 1,
+      "lastAccessed": 1776245488375,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-2-submit-bug/with_skill/grading.json",
+      "accessCount": 1,
+      "lastAccessed": 1776245488884,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-2-submit-bug/without_skill/grading.json",
+      "accessCount": 1,
+      "lastAccessed": 1776245489365,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-3-ambiguous-type/with_skill/grading.json",
+      "accessCount": 1,
+      "lastAccessed": 1776245489887,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/eval-3-ambiguous-type/without_skill/grading.json",
+      "accessCount": 1,
+      "lastAccessed": 1776245490384,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/benchmark.json",
+      "accessCount": 1,
+      "lastAccessed": 1776245537328,
+      "type": "file"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1",
+      "accessCount": 1,
+      "lastAccessed": 1776245840959,
+      "type": "directory"
+    },
+    {
+      "path": "aone-workitem-creator-workspace/iteration-1/feedback.json",
+      "accessCount": 1,
+      "lastAccessed": 1776245844089,
+      "type": "file"
+    },
+    {
+      "path": "skills/aone-workitem-creator/scripts/query-workitem.mjs",
+      "accessCount": 1,
+      "lastAccessed": 1776246028006,
+      "type": "file"
+    }
+  ],
   "userDirectives": []
 }

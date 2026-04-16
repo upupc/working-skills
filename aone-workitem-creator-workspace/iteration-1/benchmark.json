@@ -1,0 +1,176 @@
+{
+  "metadata": {
+    "skill_name": "aone-workitem-creator",
+    "skill_path": "/Users/liuyuan/workspace/working-skills/skills/aone-workitem-creator",
+    "executor_model": "claude-opus-4-6",
+    "analyzer_model": "claude-opus-4-6",
+    "timestamp": "2026-04-15T17:30:00Z",
+    "evals_run": [1, 2, 3],
+    "runs_per_configuration": 1
+  },
+  "runs": [
+    {
+      "eval_id": 1,
+      "eval_name": "create-req",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 7,
+        "failed": 0,
+        "total": 7,
+        "time_seconds": 35.7,
+        "tokens": 21283,
+        "tool_calls": 3,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "命令中包含 --stamp Req", "passed": true, "evidence": "Command includes '--stamp Req'"},
+        {"text": "命令中包含 --akProjectId 460616", "passed": true, "evidence": "Command includes '--akProjectId 460616'"},
+        {"text": "命令中包含 --subject 且标题包含'优化首页加载速度'", "passed": true, "evidence": "Command includes '--subject \"优化首页加载速度\"'"},
+        {"text": "命令中包含 --author 264746", "passed": true, "evidence": "Command includes '--author 264746'"},
+        {"text": "命令中包含 --assignedTo 264746", "passed": true, "evidence": "Command includes '--assignedTo 264746'"},
+        {"text": "命令中包含 --issueTypeId 82", "passed": true, "evidence": "Command includes '--issueTypeId 82'"},
+        {"text": "命令中包含 --description 且描述包含'加载时间'", "passed": true, "evidence": "Command includes correct description"}
+      ]
+    },
+    {
+      "eval_id": 1,
+      "eval_name": "create-req",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "failed": 7,
+        "total": 7,
+        "time_seconds": 71.6,
+        "tokens": 26063,
+        "tool_calls": 7,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "命令中包含 --stamp Req", "passed": false, "evidence": "Used inline URLSearchParams, not CLI flags"},
+        {"text": "命令中包含 --akProjectId 460616", "passed": false, "evidence": "Correct value but in URLSearchParams not CLI flag"},
+        {"text": "命令中包含 --subject 且标题包含'优化首页加载速度'", "passed": false, "evidence": "Correct value but wrong format"},
+        {"text": "命令中包含 --author 264746", "passed": false, "evidence": "Correct value but wrong format"},
+        {"text": "命令中包含 --assignedTo 264746", "passed": false, "evidence": "Correct value but wrong format"},
+        {"text": "命令中包含 --issueTypeId 82", "passed": false, "evidence": "Correct value but wrong format"},
+        {"text": "命令中包含 --description 且描述包含'加载时间'", "passed": false, "evidence": "Correct value but wrong format"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "submit-bug",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 6,
+        "failed": 0,
+        "total": 6,
+        "time_seconds": 37.8,
+        "tokens": 21232,
+        "tool_calls": 3,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "命令中包含 --stamp Bug", "passed": true, "evidence": "Command includes '--stamp Bug'"},
+        {"text": "命令中包含 --akProjectId 460616", "passed": true, "evidence": "Command includes '--akProjectId 460616'"},
+        {"text": "命令中包含 --subject 且标题包含'支付接口返回500错误'", "passed": true, "evidence": "Command includes correct subject"},
+        {"text": "命令中包含 --assignedTo 333444", "passed": true, "evidence": "Command includes '--assignedTo 333444'"},
+        {"text": "命令中包含 --priorityId 95", "passed": true, "evidence": "Correctly mapped '高' to priorityId 95"},
+        {"text": "使用了 create-issue.mjs 脚本", "passed": true, "evidence": "Uses create-issue.mjs"}
+      ]
+    },
+    {
+      "eval_id": 2,
+      "eval_name": "submit-bug",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "failed": 6,
+        "total": 6,
+        "time_seconds": 56.4,
+        "tokens": 19727,
+        "tool_calls": 2,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "命令中包含 --stamp Bug", "passed": false, "evidence": "No stamp field in curl request"},
+        {"text": "命令中包含 --akProjectId 460616", "passed": false, "evidence": "Used 'projectId' (wrong field name)"},
+        {"text": "命令中包含 --subject 且标题包含'支付接口返回500错误'", "passed": false, "evidence": "Correct value but wrong format"},
+        {"text": "命令中包含 --assignedTo 333444", "passed": false, "evidence": "Correct value but wrong format"},
+        {"text": "命令中包含 --priorityId 95", "passed": false, "evidence": "Used priority:1 instead of priorityId:95"},
+        {"text": "使用了 create-issue.mjs 脚本", "passed": false, "evidence": "Used curl/Python instead"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "ambiguous-type",
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 2,
+        "failed": 0,
+        "total": 2,
+        "time_seconds": 46.3,
+        "tokens": 21617,
+        "tool_calls": 3,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Claude 向用户询问了工作项类型", "passed": true, "evidence": "Asked user to clarify stamp type with 4 options"},
+        {"text": "没有直接执行 create-issue.mjs 命令", "passed": true, "evidence": "Explicitly decided not to execute"}
+      ]
+    },
+    {
+      "eval_id": 3,
+      "eval_name": "ambiguous-type",
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "failed": 2,
+        "total": 2,
+        "time_seconds": 43.4,
+        "tokens": 19130,
+        "tool_calls": 2,
+        "errors": 0
+      },
+      "expectations": [
+        {"text": "Claude 向用户询问了工作项类型", "passed": false, "evidence": "Did not ask, reasoned issueTypeId was sufficient"},
+        {"text": "没有直接执行 create-issue.mjs 命令", "passed": false, "evidence": "Would proceed directly with API call"}
+      ]
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {"mean": 1.0, "stddev": 0.0, "min": 1.0, "max": 1.0},
+      "time_seconds": {"mean": 39.9, "stddev": 5.5, "min": 35.7, "max": 46.3},
+      "tokens": {"mean": 21377, "stddev": 200, "min": 21232, "max": 21617}
+    },
+    "without_skill": {
+      "pass_rate": {"mean": 0.0, "stddev": 0.0, "min": 0.0, "max": 0.0},
+      "time_seconds": {"mean": 57.1, "stddev": 14.1, "min": 43.4, "max": 71.6},
+      "tokens": {"mean": 21640, "stddev": 3700, "min": 19130, "max": 26063}
+    },
+    "delta": {
+      "pass_rate": "+1.00",
+      "time_seconds": "-17.2",
+      "tokens": "-263"
+    }
+  },
+  "notes": [
+    "With-skill runs achieved 100% pass rate across all 3 evals vs 0% for without-skill",
+    "With-skill was faster on average (39.9s vs 57.1s) — the skill provides a ready-made CLI script, eliminating the need to write code from scratch",
+    "Without-skill eval 1 actually knew the correct API details (endpoint, auth scheme) but didn't use the CLI format that assertions check",
+    "Without-skill eval 2 got the priority mapping wrong (used priority:1 instead of priorityId:95) — a concrete correctness difference",
+    "Without-skill eval 3 skipped the stamp clarification because it treated issueTypeId as sufficient — but the Aone API requires stamp as a separate mandatory field",
+    "The 0% without-skill pass rate is partly due to assertions testing CLI format, but eval 2 and 3 show genuine correctness/behavior gaps"
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "skill_name": "aone-workitem-creator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "帮我在 aone 项目 460616 创建一个需求，标题是'优化首页加载速度'，我的工号是 264746，指派给我自己，issueTypeId 用 82，描述写'首页加载时间超过3秒，需要优化到1秒内'",
+      "expected_output": "应该推断 stamp 为 Req 并调用 create-issue.mjs，传递正确的参数",
+      "files": [],
+      "expectations": [
+        "命令中包含 --stamp Req",
+        "命令中包含 --akProjectId 460616",
+        "命令中包含 --subject 且标题包含'优化首页加载速度'",
+        "命令中包含 --author 264746",
+        "命令中包含 --assignedTo 264746",
+        "命令中包含 --issueTypeId 82",
+        "命令中包含 --description 且描述包含'加载时间'"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "在 aone 项目 460616 提一个 bug，标题'支付接口返回500错误'，我工号 264746，指派给 333444，issueTypeId 82，优先级设为高",
+      "expected_output": "应该推断 stamp 为 Bug 并调用 create-issue.mjs，传递正确的参数包括 priorityId",
+      "files": [],
+      "expectations": [
+        "命令中包含 --stamp Bug",
+        "命令中包含 --akProjectId 460616",
+        "命令中包含 --subject 且标题包含'支付接口返回500错误'",
+        "命令中包含 --assignedTo 333444",
+        "命令中包含 --priorityId 95",
+        "使用了 create-issue.mjs 脚本"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "帮我在 aone 项目 460616 记录一下这个事情：'和前端团队对齐接口规范'，我工号 264746，issueTypeId 82",
+      "expected_output": "用户没有明确工作项类型，应该询问用户是创建需求、任务还是缺陷",
+      "files": [],
+      "expectations": [
+        "Claude 向用户询问了工作项类型（需求/任务/Bug/风险）",
+        "没有直接执行 create-issue.mjs 命令（因为缺少 stamp 信息）"
+      ]
+    }
+  ]
+}

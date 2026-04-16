@@ -1,0 +1,40 @@
+{
+  "expectations": [
+    {
+      "text": "命令中包含 --stamp Bug",
+      "passed": true,
+      "evidence": "Command includes '--stamp Bug'"
+    },
+    {
+      "text": "命令中包含 --akProjectId 460616",
+      "passed": true,
+      "evidence": "Command includes '--akProjectId 460616'"
+    },
+    {
+      "text": "命令中包含 --subject 且标题包含'支付接口返回500错误'",
+      "passed": true,
+      "evidence": "Command includes '--subject \"支付接口返回500错误\"'"
+    },
+    {
+      "text": "命令中包含 --assignedTo 333444",
+      "passed": true,
+      "evidence": "Command includes '--assignedTo 333444'"
+    },
+    {
+      "text": "命令中包含 --priorityId 95",
+      "passed": true,
+      "evidence": "Command includes '--priorityId 95'. Correctly mapped '高' (High) to priorityId 95."
+    },
+    {
+      "text": "使用了 create-issue.mjs 脚本",
+      "passed": true,
+      "evidence": "Command uses 'node .../scripts/create-issue.mjs'"
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  }
+}

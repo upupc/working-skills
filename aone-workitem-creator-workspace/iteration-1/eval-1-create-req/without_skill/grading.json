@@ -1,0 +1,45 @@
+{
+  "expectations": [
+    {
+      "text": "命令中包含 --stamp Req",
+      "passed": false,
+      "evidence": "The script uses URLSearchParams with stamp: 'Req', but does not use the skill's CLI format (--stamp Req). Wrote inline Node.js code instead of using create-issue.mjs."
+    },
+    {
+      "text": "命令中包含 --akProjectId 460616",
+      "passed": false,
+      "evidence": "Used akProjectId: '460616' in URLSearchParams, but not as --akProjectId CLI flag. Correct value present but wrong format."
+    },
+    {
+      "text": "命令中包含 --subject 且标题包含'优化首页加载速度'",
+      "passed": false,
+      "evidence": "Used subject: '优化首页加载速度' in URLSearchParams, correct value but not CLI flag format."
+    },
+    {
+      "text": "命令中包含 --author 264746",
+      "passed": false,
+      "evidence": "Used author: '264746' in URLSearchParams, correct value but not CLI flag format."
+    },
+    {
+      "text": "命令中包含 --assignedTo 264746",
+      "passed": false,
+      "evidence": "Used assignedTo: '264746' in URLSearchParams, correct value but not CLI flag format."
+    },
+    {
+      "text": "命令中包含 --issueTypeId 82",
+      "passed": false,
+      "evidence": "Used issueTypeId: '82' in URLSearchParams, correct value but not CLI flag format."
+    },
+    {
+      "text": "命令中包含 --description 且描述包含'加载时间'",
+      "passed": false,
+      "evidence": "Used description: '首页加载时间超过3秒，需要优化到1秒内' in URLSearchParams, correct value but not CLI flag format."
+    }
+  ],
+  "summary": {
+    "passed": 0,
+    "failed": 7,
+    "total": 7,
+    "pass_rate": 0.0
+  }
+}

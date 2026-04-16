@@ -1,0 +1,14 @@
+{
+  "eval_id": 1,
+  "eval_name": "create-req",
+  "prompt": "帮我在 aone 项目 460616 创建一个需求，标题是'优化首页加载速度'，我的工号是 264746，指派给我自己，issueTypeId 用 82，描述写'首页加载时间超过3秒，需要优化到1秒内'",
+  "assertions": [
+    "命令中包含 --stamp Req",
+    "命令中包含 --akProjectId 460616",
+    "命令中包含 --subject 且标题包含'优化首页加载速度'",
+    "命令中包含 --author 264746",
+    "命令中包含 --assignedTo 264746",
+    "命令中包含 --issueTypeId 82",
+    "命令中包含 --description 且描述包含'加载时间'"
+  ]
+}
