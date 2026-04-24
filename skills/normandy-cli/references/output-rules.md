@@ -29,7 +29,7 @@ normandy ...
 - 不补造业务参数，缺什么就直接说缺什么
 - 参数名、命令名保持 CLI 原文英文；解释文字跟随用户语言
 - 如果用户明显是 AI/程序调用场景，且该命令支持 `--output`，模板优先带 `--output json`
-- 如果需要先鉴权，再在说明里补一句“先执行 `normandy auth login`”
+- 不要默认补“先执行 `normandy auth login`”。只有在用户明确要登录、需要排查认证、或真实执行后收到认证失败信号时，才补认证说明；优先推荐 `normandy auth status --output json`，确认需要 OAuth 修复时再推荐 `normandy auth login`
 
 ## 缺参数时怎么说
 

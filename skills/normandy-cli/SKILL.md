@@ -1,7 +1,7 @@
 ---
 name: normandy-cli
-version: 0.16.0
-description: 将自然语言的 Normandy 平台运维问题翻译成正确的 `normandy` CLI 命令，并给出简短、可直接复制的命令模板。只要用户在问 auth 登录、app 应用查询、app-group 应用分组、host 主机查询与登录与容器文件浏览、host diagnose 机器诊断/GPU诊断/pod诊断、app-env 环境、order 工单、quota 额度/配额/额度账号/额度统计/组织管理员、log 日志查询/SLS日志/Pod日志、resource 资源搜索、trait 应用特性/限流/熔断/降级/灰度等治理能力查询、VIP/域名/专线等网络资源、阿里云账号管理（aliyun-account/sub-account/role/user-group）、CLI 升级，或任意 `aliyun-*` 云资源查询应该用什么 Normandy 命令，即使用户没有显式提到 "CLI" 或 "normandy"，也应使用这个 skill。当用户提到"查应用"、"查机器"、"查工单"、"查 ECS/RDS/Redis/NLB"、"登录主机"、"查 VIP"、"怎么升级 normandy-cli"、"机器异常"、"诊断事件"、"GPU诊断"、"pod诊断"、"查日志"、"SLS日志"、"Pod日志"、"容器日志"、"看文件"、"看目录"、"查特性"、"trait"、"限流规则"、"熔断规则"、"降级规则"、"应用导入了哪些特性"等运维操作时，也应触发。
+version: 0.17.0
+description: 将自然语言的 Normandy 平台运维问题翻译成正确的 `normandy` CLI 命令，并给出简短、可直接复制的命令模板。只要用户在问 auth 登录、登录状态、OAuth fallback、app 应用查询、app-group 应用分组、host 主机查询与登录与容器文件浏览、host diagnose 机器诊断/GPU诊断/pod诊断、app-env 环境、order 工单、quota 额度/配额/额度账号/额度统计/组织管理员、log 日志查询/SLS日志/Pod日志、resource 资源搜索、trait 应用特性/限流/熔断/降级/灰度等治理能力查询、VIP/域名/专线等网络资源、阿里云账号管理（aliyun-account/sub-account/role/user-group）、CLI 升级，或任意 `aliyun-*` 云资源查询应该用什么 Normandy 命令，即使用户没有显式提到 "CLI" 或 "normandy"，也应使用这个 skill。当用户提到"查应用"、"查机器"、"查工单"、"查 ECS/RDS/Redis/NLB"、"登录主机"、"查 VIP"、"怎么升级 normandy-cli"、"机器异常"、"诊断事件"、"GPU诊断"、"pod诊断"、"查日志"、"SLS日志"、"Pod日志"、"容器日志"、"看文件"、"看目录"、"查特性"、"trait"、"限流规则"、"熔断规则"、"降级规则"、"应用导入了哪些特性"等运维操作时，也应触发。默认把业务命令视为可直接执行，不要把 `normandy auth login` 当成所有业务命令的前置步骤；只有在明确需要 OAuth 修复、用户主动要求登录、或真实执行后收到认证失败信号时，才引导到 `auth status` / `auth login`。
 ---
 
 # Normandy CLI 命令路由 Skill
@@ -10,7 +10,9 @@ description: 将自然语言的 Normandy 平台运维问题翻译成正确的 `n
 
 ## 前置条件
 
-首次使用或缺少normandy(-cli)执行命令时，先读 `references/execution-guard.md` 完成安装与登录检查。
+- 只要是在“推荐命令模板”，默认直接给业务命令，不要先要求用户执行 `normandy auth login`。
+- 只有在“用户明确要求执行命令”或“需要本机真实查询结果”时，才读 `references/execution-guard.md` 做安装、执行和失败恢复检查。
+- 认证默认认知要和当前 CLI 一致：业务命令优先走 AIT/APT；`normandy auth login` 是 OAuth fallback / 手工修复入口，不是所有业务命令的统一前置步骤。
 
 ## 命令速查表
 
@@ -18,9 +20,9 @@ description: 将自然语言的 Normandy 平台运维问题翻译成正确的 `n
 
 | 命令族 | 子命令与关键参数                                                                                                                                                                                                                                                                                                                                                                                                                                      | 示例 |
 |--------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|------|
-| `auth` | `login` / `logout` / `status`                                                                                                                                                                                                                                                                                                                                                                                                                 | `normandy auth login`<br>`normandy auth status --output json` |
+| `auth` | `login` / `logout` / `status`。`status` 用于看 AIT 与 OAuth 双通道状态；`login` 主要用于 OAuth fallback、非交互环境预热、或手工修复登录态                                                                                                                                                                                                                                                                                                                                                 | `normandy auth status --output json`<br>`normandy auth login` |
 | `app` | `get --name` 查基本信息；`summary --name` 查资源汇总                                                                                                                                                                                                                                                                                                                                                                                                     | `normandy app get --name normandy-ai`<br>`normandy app summary --name normandy-ai` |
-| `app-group` | `get --name` 查详情；`list --app-name` 查列表                                                                                                                                                                                                                                                                                                                                                                                                        | `normandy app-group get --app-group normandy-ai.default`<br>`normandy app-group list --app-name normandy-ai` |
+| `app-group` | `get --name` 查详情；`list --app-name` 查列表                                                                                                                                                                                                                                                                                                                                                                                                        | `normandy app-group get --name normandy-ai.default`<br>`normandy app-group list --app-name normandy-ai` |
 | `host` | `get --host` 查详情；`list --app-name\|--app-group` 查列表；`login --host` 登录；`path --server --path` 浏览容器内文件目录（默认 /home/admin，`--container` 默认 main）；`--host`/`--server` 可传 SN/hostname/IP                                                                                                                                                                                                                                                            | `normandy host get --host sn-12345`<br>`normandy host list --app-group normandy-ai.default`<br>`normandy host login --host sn-12345`<br>`normandy host path --server 11.1.1.1 --path /home/admin/logs` |
 | `host diagnose` | `list --host [--scope HOST\|GPU] [--type host\|pod]` 查诊断事件；`list --scope GPU --pod-name <name>` GPU Pod 诊断；`get --diagnose-id --type HOST\|GPU [--dimension top-kernel,critical-path]` 查诊断详情。`--diagnose-id` 需要先通过 `list` 获取：list 返回结果中的 taskId（HOST）或 profileId（GPU）即为 diagnose-id。用户没有 diagnose-id 时应先引导用 `list` 查询。用户提到"诊断 taskId"、"profileId"、"诊断详情"时应路由到 `host diagnose get`，不是 `order get`                                              | `normandy host diagnose list --host hippo-033118182196.ea120`<br>`normandy host diagnose list --scope GPU --pod-name mlflow-inference-master-0`<br>`normandy host diagnose get --diagnose-id 1233823432430332928 --type HOST`<br>`normandy host diagnose get --diagnose-id 20260317_92c372 --type GPU --dimension top-kernel,critical-path` |
 | `app-env` | `get --stack-id` 查详情；`list --app-name\|--app-group` 查列表                                                                                                                                                                                                                                                                                                                                                                                       | `normandy app-env get --stack-id 12345`<br>`normandy app-env list --app-name normandy-ai` |
@@ -48,13 +50,15 @@ description: 将自然语言的 Normandy 平台运维问题翻译成正确的 `n
 1. **命中速查表 → 直接回答**：需求明确落到某个命令族，用速查表里的信息给出命令模板，不读额外文档。
 2. **歧义/缺参 → 读一个领域参考文档**：命令族不确定或参数不明确时，先读 `references/top-level-routing.md` 定位命令族，再按需读一个领域文档（见下方"参考文档索引"）。
 3. **非 normandy 能力 → 直接说明**：不属于 CLI 能力范围的，直接告知用户，不强行路由。
-4. **执行型请求 → 读 `references/execution-guard.md`**：用户明确要执行命令时，读取该文档做校验和错误恢复。只推荐模板时跳过。
+4. **执行型请求 → 读 `references/execution-guard.md`**：用户明确要执行命令时，读取该文档做安装校验、真实执行和错误恢复。不要把“先 `auth login`”当默认步骤；先执行业务命令，只有明确认证失败时再修复。
 
 ## 回答规则
 
 - 默认只推荐模板（1-3 条），不直接执行；用户给了完整命令或明确要求执行时才执行
 - 不编造业务参数（app 名、SN、ID 等），缺什么直接说
 - AI/程序场景优先加 `--output json`；登录类命令不加
+- 不要在业务命令前机械补一句“先执行 `normandy auth login`”；除非用户问的是登录本身、非交互环境预热、或你已经拿到明确认证失败信号
+- 认证相关建议的默认顺序是：先给业务命令；需要排查认证时优先 `normandy auth status --output json`；只有 AIT 不可用且 OAuth 也缺失，或用户明确要求登录时，再给 `normandy auth login`
 - `aliyun-*` 参数名不确定时，建议跑 `normandy aliyun-xxx ... --help`
 - 需求跨多个命令族时，按顺序给 2-3 条命令，每条附一句用途
 - 解释要短，不写长教程
